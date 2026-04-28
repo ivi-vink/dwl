@@ -1669,7 +1669,7 @@ dwl_ipc_output_printstatus_to(DwlIpcOutput *ipc_output)
 	focused = focustop(monitor);
 	zdwl_ipc_output_v2_send_active(ipc_output->resource, monitor == selmon);
 
-	for (tag = 0 ; tag < LENGTH(tags); tag++) {
+	for (tag = 0 ; (size_t)tag < LENGTH(tags); tag++) {
 		numclients = state = focused_client = 0;
 		tagmask = 1 << tag;
 		if ((tagmask & monitor->tagset[monitor->seltags]) != 0)
@@ -1680,6 +1680,9 @@ dwl_ipc_output_printstatus_to(DwlIpcOutput *ipc_output)
 				continue;
 			if (!(c->tags & tagmask))
 				continue;
+
+			zdwl_ipc_output_v2_send_slurp(ipc_output->resource, client_get_slurp(c));
+
 			if (c == focused)
 				focused_client = 1;
 			if (c->isurgent)
@@ -1851,19 +1854,20 @@ drawbar(Monitor *m)
 	wlr_buffer_unlock(&buf->base);
 }
 
-void
-printstatus(void)
-{
-	drawbars();
-}
-
-void
-drawbars(void)
-{
+void printstatus(void) {
 	Monitor *m = NULL;
 
-	wl_list_for_each(m, &mons, link)
-		drawbar(m);
+	wl_list_for_each(m, &mons, link) {
+		dwl_ipc_output_printstatus(m);
+	}
+}
+
+void drawbars(void) {
+	Monitor *m = NULL;
+
+	wl_list_for_each(m, &mons, link) {
+  		drawbar(m);
+	}
 }
 
 void

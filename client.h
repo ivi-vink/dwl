@@ -131,6 +131,18 @@ client_get_appid(Client *c)
 	return c->surface.xdg->toplevel->app_id ? c->surface.xdg->toplevel->app_id : "broken";
 }
 
+static inline const char *client_get_slurp(Client *c) {
+  char *p = malloc(50);
+
+  if (sprintf(p, "%d,%d %dx%d",
+              c->geom.x,
+              c->geom.y,
+              c->bounds.width,
+              c->bounds.height) < 0)
+    return NULL;
+  return p;
+}
+
 static inline void
 client_get_clip(Client *c, struct wlr_box *clip)
 {

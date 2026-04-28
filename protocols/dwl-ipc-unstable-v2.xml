@@ -128,6 +128,13 @@ I would probably just submit raphi's patchset but I don't think that would be po
       <arg name="appid" type="string" summary="The new appid."/>
     </event>
 
+    <event name="slurp">
+      <description summary="Get geometry for slurp.">
+        Indicates the geometry has changed.
+      </description>
+      <arg name="slurp" type="string" summary="The new geometry."/>
+    </event>
+
     <event name="layout_symbol" since="1">
       <description summary="Update the current layout symbol">
           Indicates the layout has changed. Since layout symbols are dynamic.
